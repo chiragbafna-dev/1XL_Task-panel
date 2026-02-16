@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1XL Task Panel</title>
+
+<style>
+:root{
+  --bg1:#eef2ff;
+  --bg2:#fdf2f8;
+  --glass:rgba(255,255,255,0.35);
+  --border:rgba(255,255,255,0.6);
+  --text:#111827;
+  --muted:#6b7280;
+  --pink:rgba(244,114,182,0.06);
+  --pinkBorder:rgba(244,114,182,0.18);
+}
+body[data-theme="dark"]{
+  --bg1:#0f172a;
+  --bg2:#1e293b;
+  --glass:rgba(30,41,59,0.65);
+  --border:rgba(255,255,255,0.08);
+  --text:#f1f5f9;
+}
+body[data-theme="neon"]{
+  --bg1:#020617;
+  --bg2:#0f172a;
+  --glass:rgba(0,255,255,0.06);
+  --border:rgba(0,255,255,0.25);
+  --text:#00ffff;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  font-family:system-ui,Segoe UI,Arial;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+  color:var(--text);
+  min-height:100vh;
+}
+.wrap{max-width:1150px;margin:auto;padding:30px 20px 60px;}
+.topbar{display:flex;justify-content:space-between;align-items:center;}
+.brand{display:flex;align-items:center;gap:18px;}
+.logo{width:120px;height:120px;border-radius:24px;overflow:hidden;}
+.logo img{width:100%;height:100%;object-fit:cover;}
+.brandtext .title{font-size:20px;font-weight:800;}
+.brandtext .sub{font-size:13px;color:var(--muted);}
+.themeBox{display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:14px;background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--border);}
+.themeLabel{font-weight:700;}
+.toggle button{padding:8px 14px;border:none;border-radius:8px;cursor:pointer;font-weight:700;background:var(--pink);border:1px solid var(--pinkBorder);}
+.header{text-align:center;margin-top:30px;}
+.header h1{font-size:42px;font-weight:900;}
+.grid{display:grid;gap:25px;margin-top:40px;}
+.card{padding:25px;border-radius:22px;background:var(--glass);backdrop-filter:blur(22px);border:1px solid var(--border);}
+.btnGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.actionBtn{padding:14px;border-radius:999px;border:1px solid var(--pinkBorder);background:var(--pink);font-weight:700;cursor:pointer;}
+.redBtn{background:rgba(239,68,68,0.16);border:1px solid rgba(239,68,68,0.40);color:#dc2626;}
+.blueBtn{background:rgba(37,99,235,0.16);border:1px solid rgba(37,99,235,0.40);color:#2563eb;}
+@media(max-width:768px){.btnGrid{grid-template-columns:repeat(2,1fr);}}
+</style>
+</head>
+
+<body data-theme="light">
+<div class="wrap">
+
+<div class="topbar">
+  <div class="brand">
+    <div class="logo">
+      <img src="images/1xluniverse_logo.jpg">
+    </div>
+    <div class="brandtext">
+      <div class="title">1XL</div>
+      <div class="sub">Internal Operations</div>
+    </div>
+  </div>
+  <div class="themeBox">
+    <div class="themeLabel">Themes:</div>
+    <div class="toggle">
+      <button onclick="setTheme('light')">Light</button>
+      <button onclick="setTheme('dark')">Dark</button>
+      <button onclick="setTheme('neon')">Neon</button>
+    </div>
+  </div>
+</div>
+
+<div class="header">
+  <h1>Task Management Panel</h1>
+</div>
+
+<div class="grid">
+
+<!-- Pantry -->
+<div class="card">
+<h2>Pantry</h2>
+<div class="btnGrid">
+<button class="actionBtn" onclick="sendMsg('-1003801040047','Pantry staff please come to Conference Room')">Come In</button>
+<button class="actionBtn" onclick="sendMsg('-1003219821745','Dry fruits required in Conference Room')">Dry Fruits</button>
+<button class="actionBtn" onclick="sendMsg('-1003525852186','Snacks required in Conference Room')">Snacks</button>
+<button class="actionBtn redBtn" onclick="sendMsg('-1003869720574','Guest arrived. Serve Mai Dubai water')">Water 1</button>
+<button class="actionBtn blueBtn" onclick="sendMsg('-1003869720574','Serve Evian water')">Water 2</button>
+<button class="actionBtn" onclick="sendMsg('-1003879019095','Housekeeping required in Conference Room')">House Keeping</button>
+</div>
+</div>
+
+<!-- CEO Cabin -->
+<div class="card">
+<h2>CEO Cabin</h2>
+<div class="btnGrid">
+<button class="actionBtn" onclick="sendMsg('-1003763615073','Vaibhav, please come to CEO cabin')">Vaibhav</button>
+<button class="actionBtn" onclick="sendMsg('-1003763615073','Chirag, please come to CEO cabin')">Chirag</button>
+<button class="actionBtn" onclick="sendMsg('-1003763615073','Crouza, please come to CEO cabin')">Crouza</button>
+</div>
+</div>
+
+<!-- Printing -->
+<div class="card">
+<h2>Printing</h2>
+<div class="btnGrid">
+<button class="actionBtn" onclick="sendMsg('-1003763615073','Printing request received. Please proceed to printing section MR Vaibhav.')">Vaibhav</button>
+<button class="actionBtn" onclick="sendMsg('-1003763615073','Printing request received. Please proceed to printing section MR Chirag.')">Chirag</button>
+<button class="actionBtn" onclick="sendMsg('-1003763615073','Printing request received. Please proceed to printing section MRS Crouza.')">Crouza</button>
+</div>
+</div>
+
+<!-- Video Shoot -->
+<div class="card">
+<h2>Video Shoot</h2>
+<div class="btnGrid">
+<button class="actionBtn" onclick="sendMsg('-1003763615073','Please report for the video shoot MR Vaibhav.')">Vaibhav</button>
+<button class="actionBtn" onclick="sendMsg('-1003763615073','Please report for the video shoot MR Chirag.')">Chirag</button>
+<button class="actionBtn" onclick="sendMsg('-1003763615073','Please report for the video shoot MRS Crouza.')">Crouza</button>
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+function setTheme(mode){
+  document.body.setAttribute("data-theme",mode);
+}
+function sendMsg(chatId,message){
+const token="8581976396:AAGI7cxMpJL_WF07zaLzpg3AU28mKRljN4w";
+fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`);
+}
+</script>
+
+</body>
+</html>
