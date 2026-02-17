@@ -1,148 +1,523 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>1XL Task Panel</title>
 
 <style>
 :root{
   --bg1:#eef2ff;
   --bg2:#fdf2f8;
-  --glass:rgba(255,255,255,0.35);
-  --border:rgba(255,255,255,0.6);
   --text:#111827;
   --muted:#6b7280;
-  --pink:rgba(244,114,182,0.06);
-  --pinkBorder:rgba(244,114,182,0.18);
+
+  --glassA:rgba(255,255,255,0.55);
+  --glassB:rgba(255,255,255,0.16);
+  --glassBorder:rgba(255,255,255,0.62);
+
+  --btnText:#ffffff;
+  --btnBorder:rgba(255,255,255,0.28);
+
+  --btnGrad1:#fff7b0;
+  --btnGrad2:#ffd24a;
+  --btnGrad3:#e3b022;
+  --btnGrad4:#b8860b;
+  --btnGrad5:#8a6506;
+
+  --btnShadowOuter:rgba(0,0,0,0.35);
+  --btnShadowInnerTop:rgba(255,255,255,0.45);
+  --btnShadowInnerBottom:rgba(0,0,0,0.28);
 }
+
 body[data-theme="dark"]{
-  --bg1:#0f172a;
-  --bg2:#1e293b;
-  --glass:rgba(30,41,59,0.65);
-  --border:rgba(255,255,255,0.08);
+  --bg1:#0b1020;
+  --bg2:#101b37;
   --text:#f1f5f9;
+  --muted:#94a3b8;
+
+  --glassA:rgba(16,26,51,0.72);
+  --glassB:rgba(16,26,51,0.30);
+  --glassBorder:rgba(255,255,255,0.10);
+
+  --btnShadowOuter:rgba(0,0,0,0.55);
+  --btnShadowInnerTop:rgba(255,255,255,0.22);
+  --btnShadowInnerBottom:rgba(0,0,0,0.35);
 }
+
 body[data-theme="neon"]{
   --bg1:#020617;
-  --bg2:#0f172a;
-  --glass:rgba(0,255,255,0.06);
-  --border:rgba(0,255,255,0.25);
-  --text:#00ffff;
+  --bg2:#0b1222;
+  --text:#eaffff;
+  --muted:#38bdf8;
+
+  --glassA:rgba(0,255,255,0.10);
+  --glassB:rgba(255,0,255,0.05);
+  --glassBorder:rgba(0,255,255,0.25);
+
+  --btnText:#eaffff;
+  --btnBorder:rgba(0,255,255,0.35);
+
+  --btnGrad1:#b8ffff;
+  --btnGrad2:#3cf2ff;
+  --btnGrad3:#00c2ff;
+  --btnGrad4:#7c3aed;
+  --btnGrad5:#3b0764;
+
+  --btnShadowOuter:rgba(0,0,0,0.65);
 }
+
+/* ===== Base ===== */
 *{box-sizing:border-box;}
 body{
   margin:0;
   font-family:system-ui,Segoe UI,Arial;
-  background:linear-gradient(135deg,var(--bg1),var(--bg2));
   color:var(--text);
   min-height:100vh;
+
+  background:
+    radial-gradient(900px 500px at 10% 10%, rgba(99,102,241,0.22), transparent 60%),
+    radial-gradient(800px 500px at 90% 0%, rgba(236,72,153,0.18), transparent 60%),
+    linear-gradient(135deg,var(--bg1),var(--bg2));
 }
-.wrap{max-width:1150px;margin:auto;padding:30px 20px 60px;}
-.topbar{display:flex;justify-content:space-between;align-items:center;}
-.brand{display:flex;align-items:center;gap:18px;}
-.logo{width:120px;height:120px;border-radius:24px;overflow:hidden;}
+
+/* ===== Left 3-dots menu ===== */
+.sideMenuWrap{
+  position:fixed;
+  top:18px;
+  left:14px;
+  z-index:9999;
+}
+
+.dotsBtn{
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  border:1px solid var(--glassBorder);
+  background:linear-gradient(135deg,var(--glassA),var(--glassB));
+  backdrop-filter:blur(18px);
+  cursor:pointer;
+  box-shadow:0 12px 28px rgba(0,0,0,0.12);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.dots{
+  width:6px;height:6px;border-radius:50%;
+  background:rgba(0,0,0,0.55);
+  box-shadow:0 10px 0 rgba(0,0,0,0.55), 0 -10px 0 rgba(0,0,0,0.55);
+}
+body[data-theme="dark"] .dots{
+  background:rgba(255,255,255,0.70);
+  box-shadow:0 10px 0 rgba(255,255,255,0.70), 0 -10px 0 rgba(255,255,255,0.70);
+}
+body[data-theme="neon"] .dots{
+  background:rgba(234,255,255,0.85);
+  box-shadow:0 10px 0 rgba(234,255,255,0.85), 0 -10px 0 rgba(234,255,255,0.85);
+}
+
+.menuPanel{
+  margin-top:10px;
+  min-width:230px;
+  padding:10px;
+  border-radius:18px;
+  border:1px solid var(--glassBorder);
+  background:linear-gradient(135deg,var(--glassA),var(--glassB));
+  backdrop-filter:blur(18px);
+  box-shadow:0 18px 40px rgba(0,0,0,0.16);
+  display:none;
+}
+.menuPanel.open{display:block;}
+
+.menuTitle{
+  font-weight:900;
+  font-size:12px;
+  color:var(--muted);
+  margin:2px 6px 10px;
+}
+
+.menuItem{
+  width:100%;
+  border:none;
+  border-radius:14px;
+  padding:10px 12px;
+  text-align:left;
+  cursor:pointer;
+  font-weight:900;
+  background:rgba(255,255,255,0.22);
+  color:var(--text);
+  border:1px solid rgba(255,255,255,0.25);
+  transition:transform .15s ease;
+}
+.menuItem + .menuItem{ margin-top:8px; }
+.menuItem:hover{ transform:translateY(-2px); }
+.menuItem.active{ outline:2px solid rgba(99,102,241,0.35); }
+
+/* ===== Layout wrapper ===== */
+.wrap{
+  max-width:1150px;
+  margin:auto;
+  padding:26px 18px 60px;
+}
+
+/* ===== Top Bar ===== */
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:14px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.logo{
+  width:110px;
+  height:110px;
+  border-radius:22px;
+  overflow:hidden;
+  box-shadow:0 25px 60px rgba(0,0,0,0.25);
+}
 .logo img{width:100%;height:100%;object-fit:cover;}
-.brandtext .title{font-size:20px;font-weight:800;}
+
+.brandtext .title{font-weight:900;}
 .brandtext .sub{font-size:13px;color:var(--muted);}
-.themeBox{display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:14px;background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--border);}
-.themeLabel{font-weight:700;}
-.toggle button{padding:8px 14px;border:none;border-radius:8px;cursor:pointer;font-weight:700;background:var(--pink);border:1px solid var(--pinkBorder);}
-.header{text-align:center;margin-top:30px;}
-.header h1{font-size:42px;font-weight:900;}
-.grid{display:grid;gap:25px;margin-top:40px;}
-.card{padding:25px;border-radius:22px;background:var(--glass);backdrop-filter:blur(22px);border:1px solid var(--border);}
-.btnGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
-.actionBtn{padding:14px;border-radius:999px;border:1px solid var(--pinkBorder);background:var(--pink);font-weight:700;cursor:pointer;}
-.redBtn{background:rgba(239,68,68,0.16);border:1px solid rgba(239,68,68,0.40);color:#dc2626;}
-.blueBtn{background:rgba(37,99,235,0.16);border:1px solid rgba(37,99,235,0.40);color:#2563eb;}
-@media(max-width:768px){.btnGrid{grid-template-columns:repeat(2,1fr);}}
+
+.themeBox{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 14px;
+  border-radius:16px;
+  background:linear-gradient(135deg,var(--glassA),var(--glassB));
+  backdrop-filter:blur(22px);
+  border:1px solid var(--glassBorder);
+}
+
+.toggle{
+  display:flex;
+  gap:10px;
+}
+.toggle button{
+  padding:7px 12px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:800;
+  background:rgba(255,255,255,0.25);
+  color:var(--text);
+}
+
+/* ===== Page Heading ===== */
+.pageHeading{
+  margin:18px 0 6px;
+  font-weight:950;
+  font-size:26px;
+  letter-spacing:.2px;
+}
+
+/* ===== Cards ===== */
+.grid{display:grid;gap:22px;margin-top:16px;}
+.card{
+  padding:20px;
+  border-radius:24px;
+  background:linear-gradient(135deg,var(--glassA),var(--glassB));
+  backdrop-filter:blur(24px);
+  border:1px solid var(--glassBorder);
+  box-shadow:0 30px 80px rgba(0,0,0,0.15);
+}
+
+.card h2{margin:0 0 14px;font-weight:900;}
+
+.btnGrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+  justify-items:center;
+}
+
+/* ===== Small Premium Button ===== */
+.actionBtn{
+  width:80px;
+  height:80px;
+  border-radius:50%;
+  border:1px solid var(--btnBorder);
+  cursor:pointer;
+  font-weight:800;
+  font-size:11px;
+  letter-spacing:.2px;
+  color:var(--btnText);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:8px;
+  line-height:1.1;
+
+  background:
+    radial-gradient(circle at 30% 25%,
+      var(--btnGrad1) 0%,
+      var(--btnGrad2) 25%,
+      var(--btnGrad3) 55%,
+      var(--btnGrad4) 78%,
+      var(--btnGrad5) 100%
+    );
+
+  box-shadow:
+    inset 0 6px 10px var(--btnShadowInnerTop),
+    inset 0 -6px 8px var(--btnShadowInnerBottom),
+    0 8px 14px var(--btnShadowOuter);
+
+  transition:all .18s ease;
+}
+
+.actionBtn:hover{
+  transform:translateY(-4px) scale(1.08);
+  box-shadow:
+    inset 0 8px 12px var(--btnShadowInnerTop),
+    inset 0 -8px 10px var(--btnShadowInnerBottom),
+    0 14px 22px var(--btnShadowOuter);
+}
+
+/* Water Buttons */
+.redBtn{
+  background:radial-gradient(circle at 30% 25%,
+      #ffd1d1 0%,#ff5c5c 30%,#e11d48 60%,#b0002a 85%,#7a001b 100%);
+}
+.blueBtn{
+  background:radial-gradient(circle at 30% 25%,
+      #d6e7ff 0%,#4fa3ff 30%,#2563eb 60%,#0b3db8 85%,#062a86 100%);
+}
+
+@media(max-width:900px){
+  .btnGrid{grid-template-columns:repeat(2,1fr);}
+}
 </style>
 </head>
 
 <body data-theme="light">
+
+<!-- LEFT 3 DOTS MENU (INSIDE MAIN LAYOUT, NOT REPLACING IT) -->
+<div class="sideMenuWrap">
+  <button class="dotsBtn" onclick="toggleMenu()" aria-label="Open menu">
+    <div class="dots"></div>
+  </button>
+
+  <div class="menuPanel" id="menuPanel">
+    <div class="menuTitle">Panels</div>
+    <button class="menuItem active" id="navMain" onclick="goPage('main')">Main Panel</button>
+    <button class="menuItem" id="navBhushan" onclick="goPage('bhushan')">Bhushan Sir</button>
+    <button class="menuItem" id="navHashir" onclick="goPage('hashir')">Hashir Sir</button>
+  </div>
+</div>
+
+<!-- ================== MAIN WRAP ================== -->
 <div class="wrap">
 
-<div class="topbar">
-  <div class="brand">
-    <div class="logo">
-      <img src="1xluniverse_logo.jpg" alt="Logo">
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">
+        <img src="1xluniverse_logo.jpg" alt="Logo">
+      </div>
+      <div class="brandtext">
+        <div class="title">1XL</div>
+        <div class="sub">Internal Operations</div>
+      </div>
     </div>
-    <div class="brandtext">
-      <div class="title">1XL</div>
-      <div class="sub">Internal Operations</div>
+
+    <div class="themeBox">
+      <div style="font-weight:900;">Themes:</div>
+      <div class="toggle">
+        <button onclick="setTheme('light')">Light</button>
+        <button onclick="setTheme('dark')">Dark</button>
+        <button onclick="setTheme('neon')">Neon</button>
+      </div>
     </div>
   </div>
-  <div class="themeBox">
-    <div class="themeLabel">Themes:</div>
-    <div class="toggle">
-      <button onclick="setTheme('light')">Light</button>
-      <button onclick="setTheme('dark')">Dark</button>
-      <button onclick="setTheme('neon')">Neon</button>
+
+  <!-- Page heading changes per page -->
+  <div class="pageHeading" id="pageHeading">Task Panel</div>
+
+  <div class="grid">
+
+    <!-- Conference -->
+    <div class="card">
+      <h2>Conference</h2>
+      <div class="btnGrid">
+        <button class="actionBtn" onclick="sendMsg(CHAT_COME_IN, msg('Conference: Please come in.'))">Come In</button>
+        <button class="actionBtn" onclick="sendMsg(CHAT_DRY_FRUITS, msg('Conference: Dry fruits required.'))">Dry Fruits</button>
+        <button class="actionBtn" onclick="sendMsg(CHAT_SNACKS, msg('Conference: Snacks required.'))">Snacks</button>
+
+        <button class="actionBtn redBtn" onclick="sendMsg(CHAT_WATER, msg('Serve Mai Dubai water'))">Water 1</button>
+        <button class="actionBtn blueBtn" onclick="sendMsg(CHAT_WATER, msg('Serve Evian water'))">Water 2</button>
+
+        <button class="actionBtn" onclick="sendMsg(CHAT_HOUSEKEEPING, msg('Housekeeping required'))">House Keeping</button>
+
+        <button class="actionBtn" onclick="sendMsg(CHAT_STAFF, staffMsg('Vaibhav'))">Vaibhav</button>
+        <button class="actionBtn" onclick="sendMsg(CHAT_STAFF, staffMsg('Chirag'))">Chirag</button>
+        <button class="actionBtn" onclick="sendMsg(CHAT_STAFF, staffMsg('Crouza'))">Crouza</button>
+      </div>
     </div>
+
+    <!-- Cabin (was CEO Cabin earlier; will remain same box/buttons, just heading changes per page) -->
+    <div class="card">
+      <h2 id="cabinHeading">CEO Cabin</h2>
+      <div class="btnGrid">
+        <button class="actionBtn" onclick="sendMsg(CHAT_WATER, cabinMsg('Water service required'))">Water</button>
+        <button class="actionBtn" onclick="sendMsg(CHAT_COME_IN, cabinMsg('Please come in'))">Come In</button>
+        <button class="actionBtn" onclick="sendMsg(CHAT_SNACKS, cabinMsg('Snacks required'))">Snacks</button>
+
+        <button class="actionBtn" onclick="sendMsg(CHAT_STAFF, cabinStaffMsg('Vaibhav'))">Vaibhav</button>
+        <button class="actionBtn" onclick="sendMsg(CHAT_STAFF, cabinStaffMsg('Chirag'))">Chirag</button>
+        <button class="actionBtn" onclick="sendMsg(CHAT_STAFF, cabinStaffMsg('Crouza'))">Crouza</button>
+      </div>
+    </div>
+
+    <!-- Printing -->
+    <div class="card">
+      <h2>Printing</h2>
+      <div class="btnGrid">
+        <button class="actionBtn" onclick="sendMsg(CHAT_STAFF, printingMsg('Vaibhav'))">Vaibhav</button>
+        <button class="actionBtn" onclick="sendMsg(CHAT_STAFF, printingMsg('Chirag'))">Chirag</button>
+        <button class="actionBtn" onclick="sendMsg(CHAT_STAFF, printingMsg('Crouza'))">Crouza</button>
+      </div>
+    </div>
+
+    <!-- Video Shoot -->
+    <div class="card">
+      <h2>Video Shoot</h2>
+      <div class="btnGrid">
+        <button class="actionBtn" onclick="sendMsg(CHAT_STAFF, shootMsg('Vaibhav'))">Vaibhav</button>
+        <button class="actionBtn" onclick="sendMsg(CHAT_STAFF, shootMsg('Chirag'))">Chirag</button>
+        <button class="actionBtn" onclick="sendMsg(CHAT_STAFF, shootMsg('Crouza'))">Crouza</button>
+      </div>
+    </div>
+
   </div>
-</div>
-
-<div class="header">
-  <h1>Task Management Panel</h1>
-</div>
-
-<div class="grid">
-
-<!-- Pantry -->
-<div class="card">
-<h2>Pantry</h2>
-<div class="btnGrid">
-<button class="actionBtn" onclick="sendMsg('-1003801040047','Pantry staff please come to Conference Room')">Come In</button>
-<button class="actionBtn" onclick="sendMsg('-1003219821745','Dry fruits required in Conference Room')">Dry Fruits</button>
-<button class="actionBtn" onclick="sendMsg('-1003525852186','Snacks required in Conference Room')">Snacks</button>
-<button class="actionBtn redBtn" onclick="sendMsg('-1003869720574','Guest arrived. Serve Mai Dubai water')">Water 1</button>
-<button class="actionBtn blueBtn" onclick="sendMsg('-1003869720574','Serve Evian water')">Water 2</button>
-<button class="actionBtn" onclick="sendMsg('-1003879019095','Housekeeping required in Conference Room')">House Keeping</button>
-</div>
-</div>
-
-<!-- CEO Cabin -->
-<div class="card">
-<h2>CEO Cabin</h2>
-<div class="btnGrid">
-<button class="actionBtn" onclick="sendMsg('-1003763615073','Vaibhav, please come to CEO cabin')">Vaibhav</button>
-<button class="actionBtn" onclick="sendMsg('-1003763615073','Chirag, please come to CEO cabin')">Chirag</button>
-<button class="actionBtn" onclick="sendMsg('-1003763615073','Crouza, please come to CEO cabin')">Crouza</button>
-</div>
-</div>
-
-<!-- Printing -->
-<div class="card">
-<h2>Printing</h2>
-<div class="btnGrid">
-<button class="actionBtn" onclick="sendMsg('-1003763615073','Printing request received. Please proceed to printing section MR Vaibhav.')">Vaibhav</button>
-<button class="actionBtn" onclick="sendMsg('-1003763615073','Printing request received. Please proceed to printing section MR Chirag.')">Chirag</button>
-<button class="actionBtn" onclick="sendMsg('-1003763615073','Printing request received. Please proceed to printing section MRS Crouza.')">Crouza</button>
-</div>
-</div>
-
-<!-- Video Shoot -->
-<div class="card">
-<h2>Video Shoot</h2>
-<div class="btnGrid">
-<button class="actionBtn" onclick="sendMsg('-1003763615073','Please report for the video shoot MR Vaibhav.')">Vaibhav</button>
-<button class="actionBtn" onclick="sendMsg('-1003763615073','Please report for the video shoot MR Chirag.')">Chirag</button>
-<button class="actionBtn" onclick="sendMsg('-1003763615073','Please report for the video shoot MRS Crouza.')">Crouza</button>
-</div>
-</div>
-
-</div>
 </div>
 
 <script>
 function setTheme(mode){
-  document.body.setAttribute("data-theme",mode);
+  document.body.setAttribute("data-theme", mode);
 }
-function sendMsg(chatId,message){
-const token="8581976396:AAGI7cxMpJL_WF07zaLzpg3AU28mKRljN4w";
-fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`);
+
+/* Telegram */
+const TOKEN = "PASTE_YOUR_TOKEN_HERE";  // <-- paste your token here
+const CHAT_COME_IN      = "-1003801040047";
+const CHAT_WATER        = "-1003869720574";
+const CHAT_SNACKS       = "-1003525852186";
+const CHAT_HOUSEKEEPING = "-1003879019095";
+const CHAT_DRY_FRUITS   = "-1003219821745";
+const CHAT_STAFF        = "-1003763615073";
+
+/* ✅ CORS-free sender (works on GitHub Pages) */
+function sendMsg(chatId, message){
+  const url = `https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+  const img = new Image();
+  img.src = url + "&t=" + Date.now();
 }
+
+/* ====== 3 PAGES LOGIC ======
+   main = original
+   bhushan = Bhushan Sir page
+   hashir = Hashir Sir page
+*/
+let currentPage = "main";
+
+function goPage(page){
+  currentPage = page;
+
+  // set active menu highlight
+  document.getElementById("navMain").classList.remove("active");
+  document.getElementById("navBhushan").classList.remove("active");
+  document.getElementById("navHashir").classList.remove("active");
+  if(page === "main") document.getElementById("navMain").classList.add("active");
+  if(page === "bhushan") document.getElementById("navBhushan").classList.add("active");
+  if(page === "hashir") document.getElementById("navHashir").classList.add("active");
+
+  // update headings
+  const heading = document.getElementById("pageHeading");
+  const cabinHeading = document.getElementById("cabinHeading");
+
+  if(page === "main"){
+    heading.innerText = "Task Panel";
+    cabinHeading.innerText = "CEO Cabin";
+  } else if(page === "bhushan"){
+    heading.innerText = "Bhushan Sir";
+    cabinHeading.innerText = "Bhushan Sir Cabin";
+  } else if(page === "hashir"){
+    heading.innerText = "Hashir Sir";
+    cabinHeading.innerText = "Hashir Sir Cabin";
+  }
+
+  // close menu after selection
+  document.getElementById("menuPanel").classList.remove("open");
+}
+
+/* ===== Menu toggle ===== */
+function toggleMenu(){
+  document.getElementById("menuPanel").classList.toggle("open");
+}
+document.addEventListener("click", (e) => {
+  const panel = document.getElementById("menuPanel");
+  const wrap = document.querySelector(".sideMenuWrap");
+  if(panel.classList.contains("open") && !wrap.contains(e.target)){
+    panel.classList.remove("open");
+  }
+});
+
+/* ===== Message builders (same chat IDs, only text changes by page) ===== */
+function msg(baseText){
+  // Conference + general service messages
+  if(currentPage === "bhushan") return `Bhushan Sir Cabin: ${baseText}`;
+  if(currentPage === "hashir") return `Hashir Sir Cabin: ${baseText}`;
+  return baseText; // main remains original
+}
+
+function cabinName(){
+  if(currentPage === "bhushan") return "Bhushan Sir";
+  if(currentPage === "hashir") return "Hashir Sir";
+  return "CEO";
+}
+
+function cabinMsg(text){
+  const cn = cabinName();
+  if(currentPage === "main") return `CEO Cabin: ${text}`;
+  return `${cn} Cabin: ${text}`;
+}
+
+function staffMsg(name){
+  // Conference staff buttons: when on bhushan/hashir pages, they go to that sir cabin
+  if(currentPage === "bhushan") return `${name}, please come to Bhushan Sir cabin.`;
+  if(currentPage === "hashir") return `${name}, please come to Hashir Sir cabin.`;
+  return `${name} come to Conference`;
+}
+
+function cabinStaffMsg(name){
+  if(currentPage === "bhushan") return `${name}, please come to Bhushan Sir cabin.`;
+  if(currentPage === "hashir") return `${name}, please come to Hashir Sir cabin.`;
+  return `${name} to CEO Cabin`;
+}
+
+function printingMsg(name){
+  if(currentPage === "bhushan") return `Printing for Bhushan Sir cabin: ${name}, please handle printing.`;
+  if(currentPage === "hashir") return `Printing for Hashir Sir cabin: ${name}, please handle printing.`;
+  return `Printing assigned to ${name}`;
+}
+
+function shootMsg(name){
+  if(currentPage === "bhushan") return `Video shoot for Bhushan Sir cabin: ${name}, please report for video shoot.`;
+  if(currentPage === "hashir") return `Video shoot for Hashir Sir cabin: ${name}, please report for video shoot.`;
+  return `Video shoot for ${name}`;
+}
+
+/* Default page = main */
+goPage("main");
 </script>
 
 </body>
